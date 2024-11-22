@@ -16,7 +16,7 @@ def visualizacion_datos():
 
 # Página de gráficos interactivos
 def graficos_interactivos():
-    st.subtitle("Gráficos Interactivos")
+    st.title("Gráficos Interactivos")
     st.write("Esta sección permite interactuar con gráficos sobre diversos parámetros de los países.")
     # Aquí puedes incluir gráficos interactivos con Plotly, Altair, Matplotlib, etc.
     # Ejemplo de un gráfico interactivo:
