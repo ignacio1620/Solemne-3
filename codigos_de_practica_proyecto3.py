@@ -21,30 +21,6 @@ def graficos_interactivos():
     st.title("Gráficos Interactivos")
     st.write("Esta sección permite interactuar con gráficos sobre diversos parámetros de los países.")
 
-url = 'https://restcountries.com/v3.1/all'
-response = requests.get(url)
-countries_data = response.json()
-
-df = pd.DataFrame(countries_data)
-
-conteo_grupos = df.groupby('region')['name'].count()
-
-plt.figure(figsize=(10, 5))
-conteo_grupos.plot(kind='bar')
-
-plt.title('Cantidad de paises por Región') 
-plt.xlabel('Región')  
-plt.ylabel('Cantidad de paises')
-plt.xticks(rotation=45)
-plt.grid(axis='y')
-
-for i, count in enumerate(conteo_grupos):
-    plt.text(i, count + 0.2, str(count), ha='center', va='bottom', fontsize=10)
-
-plt.tight_layout()
-
-plt.show()
-
 # Función principal que gestiona la navegación
 def main():
     # Título de la aplicación
