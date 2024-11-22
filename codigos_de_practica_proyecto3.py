@@ -3,10 +3,8 @@ import streamlit as st
 # Definimos la página principal
 def pagina_principal():
     st.title("Descripción del Proyecto")
-    st.write(
-        "Este proyecto tiene como objetivo recopilar y analizar información relevante sobre diversos países del mundo, "
-        "incluyendo datos sobre su población, idiomas, densidad, área, territorio, etc. A través de una plataforma digital interactiva."
-    )
+    st.write("Este proyecto tiene como objetivo recopilar y analizar información relevante sobre diversos países del mundo, "
+        "incluyendo datos sobre su población, idiomas, densidad, área, territorio, etc. A través de una plataforma digital interactiva.")
 
 # Página para visualización de datos
 def visualizacion_datos():
@@ -45,5 +43,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
