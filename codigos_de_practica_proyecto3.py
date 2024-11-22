@@ -2,7 +2,7 @@ import streamlit as st
 
 # Definimos la página principal
 def pagina_principal():
-    st.subtitle("Descripción del Proyecto")
+    st.title("Descripción del Proyecto")
     st.write(
         "Este proyecto tiene como objetivo recopilar y analizar información relevante sobre diversos países del mundo, "
         "incluyendo datos sobre su población, idiomas, densidad, área, territorio, etc. A través de una plataforma digital interactiva."
@@ -20,6 +20,11 @@ def visualizacion_datos():
 def graficos_interactivos():
     st.title("Gráficos Interactivos")
     st.write("Esta sección permite interactuar con gráficos sobre diversos parámetros de los países.")
+    # Aquí puedes incluir gráficos interactivos con Plotly, Altair, Matplotlib, etc.
+    # Ejemplo de un gráfico interactivo:
+    # import plotly.express as px
+    # fig = px.bar(data_frame=df, x="country", y="population")
+    # st.plotly_chart(fig)
 
 # Función principal que gestiona la navegación
 def main():
