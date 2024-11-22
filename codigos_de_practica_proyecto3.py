@@ -20,9 +20,6 @@ def visualizacion_datos():
 def graficos_interactivos():
     st.title("Gráficos Interactivos")
     st.write("Esta sección permite interactuar con gráficos sobre diversos parámetros de los países.")
-import pandas as pd
-import matplotlib.pyplot as plt
-import requests
 
 url = 'https://restcountries.com/v3.1/all'
 response = requests.get(url)
