@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-import matplotlib as plt
+import pandas as pd
 
 # URL con filtros para reducir el tamaño de la respuesta
 url = 'https://restcountries.com/v3.1/all?fields=name,population,area,flag,currencies,languages,capital'
