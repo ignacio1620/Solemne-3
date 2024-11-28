@@ -9,7 +9,8 @@ response = requests.get(url)
 countries_data = response.json()
 
 # Convertir los datos a un DataFrame de pandas
-df = pd.DataFrame(countries_data)
+# Hacemos una corrección para extraer el nombre del país correctamente, ya que `df` tiene un formato anidado.
+df = pd.json_normalize(countries_data)
 
 # Página principal
 def pagina_principal():
@@ -28,14 +29,14 @@ def visualizacion_datos():
     
     # Muestra los primeros 5 países como ejemplo
     st.write("Ejemplo de los primeros 5 países:")
-    st.dataframe(df.head())
-
+    st.dataframe(df[['name.common', 'region', 'subregion', 'population', 'area']].head())  # Seleccionamos algunas columnas
+    
     # Mostrar estadísticas generales
     st.write("Estadísticas descriptivas de los datos:")
-    st.write(df.describe())
+    st.write(df[['population', 'area']].describe())
 
     # Mostrar el conteo de países por región
-    conteo_grupos = df.groupby('region')['name'].count().reset_index()
+    conteo_grupos = df.groupby('region')['name.common'].count().reset_index()
     st.write("Conteo de países por región:")
     st.dataframe(conteo_grupos)
 
@@ -45,7 +46,7 @@ def graficos_interactivos():
     st.write("Esta sección permite interactuar con gráficos sobre diversos parámetros de los países.")
     
     # Crear gráfico de cantidad de países por región
-    conteo_grupos = df.groupby('region')['name'].count()
+    conteo_grupos = df.groupby('region')['name.common'].count()
 
     # Crear un gráfico de barras
     plt.figure(figsize=(10, 5))
@@ -86,5 +87,6 @@ def main():
 # Ejecutar la aplicación
 if __name__ == "__main__":
     main()
+
 
 
