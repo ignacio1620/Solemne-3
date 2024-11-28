@@ -1,92 +1,49 @@
 import streamlit as st
-import requests
-import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import pandas as pd
 
-# Definir la URL de la API y obtener los datos
-url = 'https://restcountries.com/v3.1/all'
-response = requests.get(url)
-countries_data = response.json()
+# Generar datos de ejemplo
+np.random.seed(0)
+data = pd.DataFrame({
+    'x': np.arange(0, 100),
+    'y': np.random.randn(100).cumsum()
+})
 
-# Convertir los datos a un DataFrame de pandas
-# Hacemos una corrección para extraer el nombre del país correctamente, ya que `df` tiene un formato anidado.
-df = pd.json_normalize(countries_data)
+# Título de la aplicación
+st.title('Gráficos Interactivos con Streamlit')
 
-# Página principal
-def pagina_principal():
-    st.title("Descripción del Proyecto")
-    st.write("""
-    Este proyecto tiene como objetivo recopilar y analizar información relevante sobre diversos países del mundo,
-    incluyendo datos sobre su población, idiomas, densidad, área, territorio, etc. A través de una plataforma 
-    digital interactiva, los usuarios pueden explorar visualizaciones y gráficos interactivos sobre diferentes aspectos 
-    de cada país.
-    """)
+# Descripción
+st.write('Esta es una aplicación sencilla usando Streamlit. Los gráficos cambian según el botón presionado.')
 
-# Página para visualización de datos
-def visualizacion_datos():
-    st.title("Visualización de Datos")
-    st.write("Aquí se mostrarán datos relevantes sobre diferentes países.")
+# Crear un botón para cambiar el gráfico
+if st.button('Mostrar gráfico de líneas'):
+    st.write("Has presionado el botón: Mostrar gráfico de líneas")
     
-    # Muestra los primeros 5 países como ejemplo
-    st.write("Ejemplo de los primeros 5 países:")
-    st.dataframe(df[['name.common', 'region', 'subregion', 'population', 'area']].head())  # Seleccionamos algunas columnas
-    
-    # Mostrar estadísticas generales
-    st.write("Estadísticas descriptivas de los datos:")
-    st.write(df[['population', 'area']].describe())
-
-    # Mostrar el conteo de países por región
-    conteo_grupos = df.groupby('region')['name.common'].count().reset_index()
-    st.write("Conteo de países por región:")
-    st.dataframe(conteo_grupos)
-
-# Página de gráficos interactivos
-def graficos_interactivos():
-    st.title("Gráficos Interactivos")
-    st.write("Esta sección permite interactuar con gráficos sobre diversos parámetros de los países.")
-    
-    # Crear gráfico de cantidad de países por región
-    conteo_grupos = df.groupby('region')['name.common'].count()
-
-    # Crear un gráfico de barras
-    plt.figure(figsize=(10, 5))
-    conteo_grupos.plot(kind='bar', color='skyblue')
-
-    plt.title('Cantidad de países por Región')
-    plt.xlabel('Región')
-    plt.ylabel('Cantidad de países')
-    plt.xticks(rotation=45)
-    plt.grid(axis='y')
-
-    # Etiquetas de los valores en las barras
-    for i, count in enumerate(conteo_grupos):
-        plt.text(i, count + 0.2, str(count), ha='center', va='bottom', fontsize=10)
-
-    plt.tight_layout()
-
-    # Mostrar el gráfico en Streamlit
+    # Gráfico de líneas
+    plt.figure(figsize=(10,6))
+    plt.plot(data['x'], data['y'], label='Gráfico de Líneas', color='b')
+    plt.title('Gráfico de Líneas')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.legend()
     st.pyplot(plt)
 
-# Función principal que gestiona la navegación
-def main():
-    # Título de la aplicación
-    st.title("Aplicación de Análisis de Países del Mundo")
+elif st.button('Mostrar gráfico de dispersión'):
+    st.write("Has presionado el botón: Mostrar gráfico de dispersión")
     
-    # Barra lateral para navegación
-    st.sidebar.title("Navegación")
-    pagina = st.sidebar.selectbox("Selecciona una página", ["Página principal", "Visualización de datos", "Gráficos interactivos"])
-    
-    # Redirigir al contenido correspondiente según la página seleccionada
-    if pagina == "Página principal":
-        pagina_principal()
-    elif pagina == "Visualización de datos":
-        visualizacion_datos()
-    elif pagina == "Gráficos interactivos":
-        graficos_interactivos()
+    # Gráfico de dispersión
+    plt.figure(figsize=(10,6))
+    sns.scatterplot(x='x', y='y', data=data, color='r')
+    plt.title('Gráfico de Dispersión')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    st.pyplot(plt)
 
-# Ejecutar la aplicación
-if __name__ == "__main__":
-    main()
+else:
+    st.write("Presiona un botón para ver el gráfico")
+
 
 
 
