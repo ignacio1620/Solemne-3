@@ -44,8 +44,8 @@ def obtener_datos_pais(pais):
 def cargar_datos():
     try:
         response = session.get(url, timeout=30)
-        response.raise_for_status()
-        return response.json()
+        response.raise_for_status()  # Lanza excepción si ocurre un error con la solicitud HTTP
+        return response.json()  # Retorna la respuesta como un objeto JSON
     except requests.exceptions.RequestException as e:
         st.error(f"Error durante la solicitud: {e}")
         return []
@@ -126,6 +126,11 @@ def main():
     global countries_data
     countries_data = cargar_datos()
 
+    # Verificar si la carga fue exitosa
+    if not countries_data:
+        st.error("No se pudieron cargar los datos de los países. Intenta nuevamente.")
+        return
+    
     # Título de la aplicación
     st.title("Aplicación de Análisis de Países del Mundo")
     
@@ -143,6 +148,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
