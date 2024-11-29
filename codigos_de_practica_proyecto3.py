@@ -131,6 +131,8 @@ pages = {
 
 st.sidebar.title("Navegación")
 selected_page = st.sidebar.radio("Selecciona una página:", list(pages.keys()))
+pages[selected_page]()
+
 
 
 
