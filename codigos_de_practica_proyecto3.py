@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-
 import requests
 
 # Configuración inicial
@@ -19,16 +18,23 @@ def load_data(url):
         # Traducir las columnas al español
         translations = {
             "name.common": "Nombre",
+            "name.official": "Nombre Oficial",
             "population": "Población",
             "area": "Área",
             "flag": "Bandera",
             "currencies": "Monedas",
             "languages": "Idiomas",
-            "capital": "Capital"
+            "capital": "Capital",
+            "region": "Región",
+            "subregion": "Subregión",
+            "borders": "Fronteras",
+            "timezones": "Husos Horarios",
+            "demonyms.eng.f": "Gentilicio (Femenino)",
+            "demonyms.eng.m": "Gentilicio (Masculino)"
         }
         data.rename(columns=translations, inplace=True)
 
-        # Asegurarse de que las columnas sean numéricas cuando corresponda
+        # Intentar convertir columnas numéricas
         for col in ["Población", "Área"]:
             if col in data.columns:
                 data[col] = pd.to_numeric(data[col], errors="coerce")
@@ -51,7 +57,7 @@ def home():
 # Página para cargar datos
 def cargar_datos():
     st.title("Cargar Datos desde una URL")
-    default_url = "https://restcountries.com/v3.1/all?fields=name,population,area,flag,currencies,languages,capital"
+    default_url = "https://restcountries.com/v3.1/all?fields=name,population,area,flag,currencies,languages,capital,region,subregion,borders,timezones,demonyms"
     url = st.text_input("Introduce la URL de los datos:", value=default_url)
     if st.button("Cargar Datos"):
         if url:
@@ -74,16 +80,16 @@ def graficos():
         return
 
     data = st.session_state["data"]
-    # Detectar columnas numéricas nuevamente en caso de problemas con tipos de datos
-    numeric_columns = data.select_dtypes(include=["float64", "int64"]).columns.tolist()
+    numeric_columns = data.select_dtypes(include=["float64", "int64"]).columns
 
-    if not numeric_columns:
+    if numeric_columns.empty:
         st.warning("El dataset no contiene columnas numéricas para graficar.")
         return
 
     selected_columns = st.multiselect(
         "Selecciona las columnas numéricas para graficar:",
-        options=numeric_columns
+        options=numeric_columns,
+        format_func=lambda x: x.replace("_", " ")  # Formato legible
     )
 
     chart_type = st.selectbox(
@@ -93,10 +99,10 @@ def graficos():
 
     if st.button("Generar Gráfico"):
         if selected_columns and chart_type != "Selecciona una opción":
-            
+            fig, ax = plt.subplots()
             if chart_type == "Línea":
                 for col in selected_columns:
-                   
+                    ax.plot(data.index, data[col], label=col)
                 ax.legend()
                 ax.set_title("Gráfico de Línea")
             elif chart_type == "Barras":
@@ -132,6 +138,7 @@ pages = {
 st.sidebar.title("Navegación")
 selected_page = st.sidebar.radio("Selecciona una página:", list(pages.keys()))
 pages[selected_page]()
+
 
 
 
