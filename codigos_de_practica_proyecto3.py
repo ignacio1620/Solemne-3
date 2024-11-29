@@ -1,14 +1,20 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import requests
 
 # Configuración inicial
 st.set_page_config(page_title="App Multi-páginas", layout="wide")
 
 # Función para cargar datos desde una URL
-def load_data('https://restcountries.com/v3.1/all?fields=name,population,area,flag,currencies,languages,capital'):
-       try:
-        data = pd.read_csv('https://restcountries.com/v3.1/all?fields=name,population,area,flag,currencies,languages,capital')
+def load_data(url):
+    try:
+        # Obtener datos desde la URL
+        response = requests.get(url)
+        response.raise_for_status()  # Verifica si hubo errores en la solicitud
+
+        # Convertir JSON a DataFrame
+        data = pd.json_normalize(response.json())
         return data, None
     except Exception as e:
         return None, str(e)
@@ -27,7 +33,8 @@ def home():
 # Página para cargar datos
 def cargar_datos():
     st.title("Cargar Datos desde una URL")
-    url = st.text_input("Introduce la URL del archivo CSV:")
+    default_url = "https://restcountries.com/v3.1/all?fields=name,population,area,flag,currencies,languages,capital"
+    url = st.text_input("Introduce la URL de los datos:", value=default_url)
     if st.button("Cargar Datos"):
         if url:
             data, error = load_data(url)
@@ -106,6 +113,7 @@ pages = {
 st.sidebar.title("Navegación")
 selected_page = st.sidebar.radio("Selecciona una página:", list(pages.keys()))
 pages[selected_page]()
+
 
 
 
