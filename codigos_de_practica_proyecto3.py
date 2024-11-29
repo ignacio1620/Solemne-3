@@ -7,7 +7,6 @@ st.set_page_config(page_title="App Multi-páginas", layout="wide")
 
 # Función para cargar datos desde una URL
 def load_data(url): 'https://restcountries.com/v3.1/all?fields=name,population,area,flag,currencies,languages,capital'
-    try:
         data = pd.read_csv(url)
         return data, None
     except Exception as e:
