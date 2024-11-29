@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-
+import matplotlib.pyplot as plt
 import requests
 
 # Configuración inicial
@@ -16,9 +16,21 @@ def load_data(url):
         # Convertir JSON a DataFrame
         data = pd.json_normalize(response.json())
         
+        # Traducir las columnas al español
+        translations = {
+            "name.common": "Nombre",
+            "population": "Población",
+            "area": "Área",
+            "flag": "Bandera",
+            "currencies": "Monedas",
+            "languages": "Idiomas",
+            "capital": "Capital"
+        }
+        data.rename(columns=translations, inplace=True)
+
         # Intentar convertir columnas numéricas
-        for col in data.columns:
-            data[col] = pd.to_numeric(data[col], errors="ignore")
+        for col in ["Población", "Área"]:
+            data[col] = pd.to_numeric(data[col], errors="coerce")
 
         return data, None
     except Exception as e:
@@ -70,6 +82,7 @@ def graficos():
     selected_columns = st.multiselect(
         "Selecciona las columnas numéricas para graficar:",
         options=numeric_columns,
+        format_func=lambda x: x.replace("_", " ")  # Formato legible
     )
 
     chart_type = st.selectbox(
@@ -118,6 +131,7 @@ pages = {
 st.sidebar.title("Navegación")
 selected_page = st.sidebar.radio("Selecciona una página:", list(pages.keys()))
 pages[selected_page]()
+
 
 
 
