@@ -93,7 +93,7 @@ def graficos():
 
     if st.button("Generar Gráfico"):
         if selected_columns and chart_type != "Selecciona una opción":
-            fig, ax = plt.subplots()
+            
             if chart_type == "Línea":
                 for col in selected_columns:
                     ax.plot(data.index, data[col], label=col)
@@ -131,7 +131,7 @@ pages = {
 
 st.sidebar.title("Navegación")
 selected_page = st.sidebar.radio("Selecciona una página:", list(pages.keys()))
-pages[selected_page]()
+
 
 
 
