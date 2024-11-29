@@ -37,15 +37,7 @@ def load_data(url):
         # Intentar convertir columnas numéricas
         for col in ["Población", "Área"]:
             if col in data.columns:
-                # Convertir a numérico y reemplazar NaN por 0 (opcional)
-                data[col] = pd.to_numeric(data[col], errors="coerce").fillna(0)
-                # Forzar el tipo de datos a entero o flotante según la necesidad
-                if data[col].mod(1).eq(0).all():  # Verifica si todos los valores son enteros
-                    data[col] = data[col].astype(int)
-
-        # Validación de tipos de datos para depuración
-        st.write("Tipos de datos después de la conversión:")
-        st.write(data.dtypes)
+                data[col] = pd.to_numeric(data[col], errors="coerce")
 
         return data, None
     except Exception as e:
@@ -146,6 +138,7 @@ pages = {
 st.sidebar.title("Navegación")
 selected_page = st.sidebar.radio("Selecciona una página:", list(pages.keys()))
 pages[selected_page]()
+
 
 
 
