@@ -96,7 +96,7 @@ def graficos():
             
             if chart_type == "Línea":
                 for col in selected_columns:
-                    ax.plot(data.index, data[col], label=col)
+                   
                 ax.legend()
                 ax.set_title("Gráfico de Línea")
             elif chart_type == "Barras":
