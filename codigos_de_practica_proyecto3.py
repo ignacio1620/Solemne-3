@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-
+import matplotlib.pyplot as plt
 import requests
 
 # Configuración inicial
@@ -15,6 +15,11 @@ def load_data(url):
 
         # Convertir JSON a DataFrame
         data = pd.json_normalize(response.json())
+        
+        # Intentar convertir columnas numéricas
+        for col in data.columns:
+            data[col] = pd.to_numeric(data[col], errors="ignore")
+
         return data, None
     except Exception as e:
         return None, str(e)
@@ -77,7 +82,7 @@ def graficos():
             fig, ax = plt.subplots()
             if chart_type == "Línea":
                 for col in selected_columns:
-                    ax.plot(data[col], label=col)
+                    ax.plot(data.index, data[col], label=col)
                 ax.legend()
                 ax.set_title("Gráfico de Línea")
             elif chart_type == "Barras":
@@ -88,7 +93,7 @@ def graficos():
                     st.warning("Selecciona solo una columna para un gráfico de barras.")
             elif chart_type == "Histograma":
                 for col in selected_columns:
-                    ax.hist(data[col], bins=20, alpha=0.5, label=col)
+                    ax.hist(data[col].dropna(), bins=20, alpha=0.5, label=col)
                 ax.legend()
                 ax.set_title("Histograma")
             elif chart_type == "Dispersión":
@@ -113,6 +118,7 @@ pages = {
 st.sidebar.title("Navegación")
 selected_page = st.sidebar.radio("Selecciona una página:", list(pages.keys()))
 pages[selected_page]()
+
 
 
 
