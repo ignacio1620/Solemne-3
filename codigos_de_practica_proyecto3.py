@@ -28,9 +28,10 @@ def load_data(url):
         }
         data.rename(columns=translations, inplace=True)
 
-        # Intentar convertir columnas numéricas
+        # Asegurarse de que las columnas sean numéricas cuando corresponda
         for col in ["Población", "Área"]:
-            data[col] = pd.to_numeric(data[col], errors="coerce")
+            if col in data.columns:
+                data[col] = pd.to_numeric(data[col], errors="coerce")
 
         return data, None
     except Exception as e:
@@ -73,16 +74,16 @@ def graficos():
         return
 
     data = st.session_state["data"]
-    numeric_columns = data.select_dtypes(include=["float64", "int64"]).columns
+    # Detectar columnas numéricas nuevamente en caso de problemas con tipos de datos
+    numeric_columns = data.select_dtypes(include=["float64", "int64"]).columns.tolist()
 
-    if numeric_columns.empty:
+    if not numeric_columns:
         st.warning("El dataset no contiene columnas numéricas para graficar.")
         return
 
     selected_columns = st.multiselect(
         "Selecciona las columnas numéricas para graficar:",
-        options=numeric_columns,
-        format_func=lambda x: x.replace("_", " ")  # Formato legible
+        options=numeric_columns
     )
 
     chart_type = st.selectbox(
@@ -131,6 +132,7 @@ pages = {
 st.sidebar.title("Navegación")
 selected_page = st.sidebar.radio("Selecciona una página:", list(pages.keys()))
 pages[selected_page]()
+
 
 
 
